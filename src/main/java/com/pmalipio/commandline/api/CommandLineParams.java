@@ -3,10 +3,12 @@ package com.pmalipio.commandline.api;
 import org.springframework.lang.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-public class CommandLineParams {
+public class CommandLineParams<T> {
     private String workingDirectory;
-    private Consumer<String> lineProcessor;
+    private Function<String, T> lineProcessor;
     private Integer skip;
     private Integer limit;
     private String[] command;
@@ -15,7 +17,7 @@ public class CommandLineParams {
         return new CommandLineParamsBuilder();
     }
 
-    private CommandLineParams(final String workingDirectory, final Consumer<String> lineProcessor,
+    private CommandLineParams(final String workingDirectory, final Function<String, T> lineProcessor,
                               final @Nullable Integer skip, final @Nullable Integer limit,
                               final String... command) {
         this.workingDirectory = workingDirectory;
@@ -29,7 +31,7 @@ public class CommandLineParams {
         return workingDirectory;
     }
 
-    public Consumer<String> getLineProcessor() {
+    public Function<String, T>   getLineProcessor() {
         return lineProcessor;
     }
 
@@ -45,9 +47,9 @@ public class CommandLineParams {
         return command;
     }
 
-    public static final class CommandLineParamsBuilder {
+    public static final class CommandLineParamsBuilder<T> {
         private String workingDirectory;
-        private Consumer<String> lineProcessor;
+        private Function<String, T>  lineProcessor;
         private Integer skip;
         private Integer limit;
         private String[] command;
@@ -60,7 +62,7 @@ public class CommandLineParams {
             return this;
         }
 
-        public CommandLineParamsBuilder withLineProcessor(Consumer<String> lineProcessor) {
+        public CommandLineParamsBuilder withLineProcessor(Function<String, T>  lineProcessor) {
             this.lineProcessor = lineProcessor;
             return this;
         }

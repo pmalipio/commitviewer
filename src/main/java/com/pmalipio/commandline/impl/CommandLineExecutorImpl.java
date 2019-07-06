@@ -5,15 +5,16 @@ import com.pmalipio.commandline.api.CommandLineParams;
 import io.atlassian.fugue.Either;
 
 import java.io.*;
-import java.util.concurrent.Executors;
+import java.util.List;
+import java.util.concurrent.*;
 
-public class CommandLineExecutorImpl implements CommandLineExecutor {
+public class CommandLineExecutorImpl<T> implements CommandLineExecutor {
 
     CommandLineExecutorImpl() {
     }
 
     @Override
-    public Either<Integer, Exception> runCommand(CommandLineParams commandLineParams) {
+    public Either<List<T>, Exception> runCommand(CommandLineParams commandLineParams) {
 
         final ProcessBuilder builder = new ProcessBuilder()
                 .command(commandLineParams.getCommand())
@@ -26,9 +27,10 @@ public class CommandLineExecutorImpl implements CommandLineExecutor {
             return Either.right(e);
         }
 
-        final StreamProcessor streamProcessor = StreamProcessor.from(process.getInputStream(), commandLineParams);
+        final StreamProcessor<T> streamProcessor = StreamProcessor.from(process.getInputStream(), commandLineParams);
 
-        Executors.newSingleThreadExecutor().submit(streamProcessor);
+        Future<List<T>> futureResult = CompletableFuture.supplyAsync(streamProcessor);
+
 
         final Integer exitCode;
         try {
@@ -36,6 +38,13 @@ public class CommandLineExecutorImpl implements CommandLineExecutor {
         } catch (InterruptedException e) {
             return Either.right(e);
         }
-        return Either.left(exitCode);
+
+        try {
+            List<T> result = futureResult.get(10, TimeUnit.SECONDS);
+            return Either.left(result);
+        } catch (Exception e) {
+            return Either.right(e);
+        }
+
     }
 }

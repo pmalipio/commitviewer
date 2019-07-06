@@ -1,8 +1,9 @@
 package com.pmalipio.commandline.api;
 
 import io.atlassian.fugue.Either;
-import org.springframework.stereotype.Component;
 
-public interface CommandLineExecutor {
-    Either<Integer, Exception> runCommand(CommandLineParams commandLineParams);
+import java.util.List;
+
+public interface CommandLineExecutor<T> {
+    Either<List<T>, Exception> runCommand(CommandLineParams commandLineParams);
 }
