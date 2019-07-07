@@ -11,6 +11,7 @@ public class CommandLineParams<T> {
     private Function<String, T> lineProcessor;
     private Integer skip;
     private Integer limit;
+    private Integer timeout; // in seconds
     private String[] command;
 
     public static CommandLineParamsBuilder builder() {
@@ -19,11 +20,12 @@ public class CommandLineParams<T> {
 
     private CommandLineParams(final String workingDirectory, final Function<String, T> lineProcessor,
                               final @Nullable Integer skip, final @Nullable Integer limit,
-                              final String... command) {
+                              final @Nullable Integer timeout, final String... command) {
         this.workingDirectory = workingDirectory;
         this.lineProcessor = lineProcessor;
         this.skip = skip;
         this.limit = limit;
+        this.timeout = timeout;
         this.command = command;
     }
 
@@ -47,12 +49,17 @@ public class CommandLineParams<T> {
         return command;
     }
 
+    public Integer getTimeout() {
+        return timeout;
+    }
+
     public static final class CommandLineParamsBuilder<T> {
-        private String workingDirectory;
-        private Function<String, T>  lineProcessor;
-        private Integer skip;
-        private Integer limit;
-        private String[] command;
+        private String workingDirectory = System.getProperty("java.io.tmpdir");
+        private Function<String, T>  lineProcessor = x -> (T) x;
+        private Integer skip = null;
+        private Integer limit = null;
+        private Integer timeout = 10; // default in seconds
+        private String[] command = new String[] {""};
 
         private CommandLineParamsBuilder() {
         }
@@ -77,13 +84,19 @@ public class CommandLineParams<T> {
             return this;
         }
 
+        public CommandLineParamsBuilder withTimeout(Integer timeout) {
+            this.timeout = timeout;
+            return this;
+        }
+
         public CommandLineParamsBuilder withCommand(String... command) {
             this.command = command;
             return this;
         }
 
         public CommandLineParams build() {
-            CommandLineParams commandLineParams = new CommandLineParams(workingDirectory, lineProcessor, skip, limit, command);
+            CommandLineParams commandLineParams = new CommandLineParams(workingDirectory, lineProcessor, skip, limit,
+                    timeout, command);
             return commandLineParams;
         }
     }

@@ -2,6 +2,7 @@ package com.pmalipio.commandline.impl;
 
 import com.pmalipio.commandline.api.CommandLineExecutor;
 import com.pmalipio.commandline.api.CommandLineParams;
+import com.pmalipio.commandline.exceptions.ExitCodeException;
 import io.atlassian.fugue.Either;
 
 import java.io.*;
@@ -20,27 +21,21 @@ public class CommandLineExecutorImpl<T> implements CommandLineExecutor {
                 .command(commandLineParams.getCommand())
                 .directory(new File(commandLineParams.getWorkingDirectory()));
 
-        final Process process;
         try {
-            process = builder.start();
-        } catch (IOException e) {
-            return Either.right(e);
-        }
+            final Process process = builder.start();
 
-        final StreamProcessor<T> streamProcessor = StreamProcessor.from(process.getInputStream(), commandLineParams);
+            final StreamProcessor<T> streamProcessor = StreamProcessor.from(process.getInputStream(), commandLineParams);
 
-        Future<List<T>> futureResult = CompletableFuture.supplyAsync(streamProcessor);
+            final Future<List<T>> futureResult = CompletableFuture.supplyAsync(streamProcessor);
 
+            final Integer exitCode = process.waitFor();
 
-        final Integer exitCode;
-        try {
-            exitCode = process.waitFor();
-        } catch (InterruptedException e) {
-            return Either.right(e);
-        }
+            if (exitCode != 0) {
+                return Either.right(new ExitCodeException("Process did not return 0"));
+            }
 
-        try {
-            List<T> result = futureResult.get(10, TimeUnit.SECONDS);
+            List<T> result = futureResult.get(commandLineParams.getTimeout(), TimeUnit.SECONDS);
+
             return Either.left(result);
         } catch (Exception e) {
             return Either.right(e);

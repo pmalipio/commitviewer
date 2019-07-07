@@ -17,15 +17,13 @@ public class CommandLineTests {
 
         final Function<String, String> processor = x -> x.toUpperCase();
 
-        CommandLineParams<String> params = CommandLineParams.builder()
+        final CommandLineParams<String> params = CommandLineParams.builder()
                 .withCommand("ls","/")
                 .withLineProcessor(processor)
                 .withWorkingDirectory(System.getProperty("java.io.tmpdir"))
                 .build();
 
-        Either<List<String>, Exception> integerExceptionEither = cmd.runCommand(params);
-
-        Thread.sleep(2000);
+        final Either<List<String>, Exception> integerExceptionEither = cmd.runCommand(params);
     }
 
     @Test
@@ -42,7 +40,22 @@ public class CommandLineTests {
                 .build();
 
         Either<List<String>, Exception> integerExceptionEither = cmd.runCommand(params);
+    }
 
-        Thread.sleep(2000);
+    @Test
+    public void skipAndLimitTest() throws InterruptedException {
+        CommandLineExecutor cmd = new CommandLineExecutorImpl();
+
+        final Function<String, String> processor = x -> x.toUpperCase();
+
+        CommandLineParams params = CommandLineParams.builder()
+                .withCommand("ls","/")
+                .withSkip(3)
+                .withLimit(5)
+                .withLineProcessor(processor)
+                .withWorkingDirectory(System.getProperty("java.io.tmpdir"))
+                .build();
+
+        Either<List<String>, Exception> integerExceptionEither = cmd.runCommand(params);
     }
 }
