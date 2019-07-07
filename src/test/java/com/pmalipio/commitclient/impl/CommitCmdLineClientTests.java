@@ -12,7 +12,7 @@ import java.util.concurrent.TimeoutException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommitClientTests {
+public class CommitCmdLineClientTests {
 
     @Test
     public void basicTest() {

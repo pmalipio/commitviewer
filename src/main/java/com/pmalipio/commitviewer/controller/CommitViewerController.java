@@ -5,6 +5,7 @@ import com.pmalipio.commitclient.api.CommitClient;
 import com.pmalipio.commitclient.api.CommitClientConfiguration;
 import com.pmalipio.commitclient.data.CommitInfo;
 import com.pmalipio.commitclient.impl.CommandLineCommitClient;
+import com.pmalipio.commitclient.impl.GithubCommitClient;
 import io.atlassian.fugue.Either;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,8 @@ public class CommitViewerController {
                 .withPageSize(30)
                 .withTimeout(10)
                 .build();
-        this.commitClient = CommandLineCommitClient.getInstance(configuration);
+        //this.commitClient = CommandLineCommitClient.getInstance(configuration);
+        this.commitClient = GithubCommitClient.getInstance();
     }
 
     @GetMapping("/repos/{user}/{repname}/commits")
