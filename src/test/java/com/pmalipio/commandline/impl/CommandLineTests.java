@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CommandLineTests {
     private String testFilePath;
-    private CommandLineExecutor cmd = new CommandLineExecutorImpl();
+    private CommandLineExecutor cmd = CommandLineExecutorImpl.getInstance();
 
     @Before
     public void setup() {
@@ -73,5 +73,26 @@ public class CommandLineTests {
         final Either<List<String>, Exception> result = cmd.runCommand(params);
 
         assertThat(result.left()).contains(Arrays.asList("D", "E", "F", "G", "H"));
+    }
+
+    @Test
+    public void workingDirectoryTest() {
+        final CommandLineParams<String> params1 = CommandLineParams.builder()
+                .withCommand("bash", "-c","echo hello > test.txt")
+                .build();
+        final Either<List<String>, Exception> result1 = cmd.runCommand(params1);
+        final CommandLineParams<String> params2 = CommandLineParams.builder()
+                .withCommand("cat","test.txt")
+                .build();
+        final Either<List<String>, Exception> result2 = cmd.runCommand(params2);
+        assertThat(result2.left()).contains(Arrays.asList("hello"));
+    }
+
+    @Test
+    public void invalidTest() {
+        final CommandLineParams<String> params = CommandLineParams.builder()
+                .build();
+        final Either<List<String>, Exception> result = cmd.runCommand(params);
+        assertThat(result.isRight());
     }
 }

@@ -11,7 +11,16 @@ import java.util.concurrent.*;
 
 public class CommandLineExecutorImpl<T> implements CommandLineExecutor {
 
-    CommandLineExecutorImpl() {
+    private static CommandLineExecutor instance;
+
+    private CommandLineExecutorImpl() {
+    }
+
+    public static CommandLineExecutor getInstance() {
+        if(instance == null) {
+            instance = new CommandLineExecutorImpl();
+        }
+        return instance;
     }
 
     @Override
