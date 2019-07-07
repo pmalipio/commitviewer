@@ -37,12 +37,6 @@ public class CommandLineExecutorImpl<T> implements CommandLineExecutor {
 
             final Future<List<T>> futureResult = CompletableFuture.supplyAsync(streamProcessor);
 
-            final Integer exitCode = process.waitFor();
-
-            if (exitCode != 0) {
-                return Either.right(new ExitCodeException("Process did not return 0"));
-            }
-
             List<T> result = futureResult.get(commandLineParams.getTimeout(), TimeUnit.SECONDS);
 
             return Either.left(result);

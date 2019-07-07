@@ -4,7 +4,6 @@ import com.pmalipio.commandline.api.CommandLineParams;
 import com.pmalipio.gitclient.api.GitClient;
 import com.pmalipio.gitclient.api.GitClientConfiguration;
 import io.atlassian.fugue.Either;
-import org.assertj.core.util.VisibleForTesting;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,17 @@ public class GitClientImpl<T> implements GitClient {
 
     @Override
     public Either<List<String>, Exception> cloneRepository(final String url) {
+        final String dir = GitClientImpl.getDirectoryFromURl(url).get();
+        final CommandLineParams rmOldClone = CommandLineParams.builder()
+                .withWorkingDirectory(configuration.getBaseDirectory())
+                .withTimeout(configuration.getCommandExecutionTimeout())
+                .withCommand("rm", "-fr", dir)
+                .build();
+
+        configuration.getCommandLineExecutor().runCommand(rmOldClone);
+
         final CommandLineParams gitCloneCmd = CommandLineParams.builder()
+                .withWorkingDirectory(configuration.getBaseDirectory())
                 .withTimeout(configuration.getCommandExecutionTimeout())
                 .withCommand("git", "clone", url)
                 .build();
@@ -73,8 +82,7 @@ public class GitClientImpl<T> implements GitClient {
         return configuration.getCommandLineExecutor().runCommand(logCmd);
     }
 
-    @VisibleForTesting
-    static final Optional<String> getDirectoryFromURl(final String url) {
+    public static final Optional<String> getDirectoryFromURl(final String url) {
         final Pattern pattern = Pattern.compile(".*\\/(.*)\\.git$");
         final Matcher matcher = pattern.matcher(url);
         if (matcher.find()) {

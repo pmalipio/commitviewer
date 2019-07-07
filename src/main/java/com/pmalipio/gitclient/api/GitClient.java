@@ -1,7 +1,6 @@
 package com.pmalipio.gitclient.api;
 
 import io.atlassian.fugue.Either;
-import io.atlassian.fugue.Unit;
 
 import java.util.List;
 import java.util.function.Function;

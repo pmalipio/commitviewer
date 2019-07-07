@@ -5,7 +5,6 @@ import com.pmalipio.commandline.api.CommandLineParams;
 import com.pmalipio.commandline.impl.CommandLineExecutorImpl;
 import com.pmalipio.gitclient.api.GitClient;
 import com.pmalipio.gitclient.api.GitClientConfiguration;
-import com.pmalipio.gitclient.impl.GitClientImpl;
 import io.atlassian.fugue.Either;
 import org.junit.Before;
 import org.junit.Test;
