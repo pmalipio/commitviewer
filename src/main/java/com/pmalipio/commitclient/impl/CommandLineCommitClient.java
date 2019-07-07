@@ -5,17 +5,22 @@ import com.pmalipio.commandline.impl.CommandLineExecutorImpl;
 import com.pmalipio.commitclient.api.CommitClient;
 import com.pmalipio.commitclient.api.CommitClientConfiguration;
 import com.pmalipio.commitclient.data.CommitInfo;
+import com.pmalipio.commitviewer.controller.CommitViewerController;
 import com.pmalipio.gitclient.api.GitClient;
 import com.pmalipio.gitclient.api.GitClientConfiguration;
 import com.pmalipio.gitclient.impl.GitClientImpl;
 import io.atlassian.fugue.Either;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 public class CommandLineCommitClient implements CommitClient {
+    private static final Logger logger = LoggerFactory.getLogger(CommandLineCommitClient.class);
 
+    private static final String BASE_URL = "https://github.com/";
     private static CommandLineCommitClient instance;
 
     private final GitClient<CommitInfo> gitClient;
@@ -57,7 +62,8 @@ public class CommandLineCommitClient implements CommitClient {
     }
 
     @Override
-    public Either<List<CommitInfo>, Exception> listCommits(final String repositoryUrl, final String branch) {
+    public Either<List<CommitInfo>, Exception> listCommits(final String user, final String repName, final String branch) {
+        final String repositoryUrl = BASE_URL + user + "/" + repName + ".git";
         final String dir = GitClientImpl.getDirectoryFromURl(repositoryUrl).get();
         final Either<List<CommitInfo>, Exception> setupResult = setUpCommitList(repositoryUrl, branch);
         if (setupResult.isRight()) {
@@ -67,13 +73,14 @@ public class CommandLineCommitClient implements CommitClient {
     }
 
     @Override
-    public Either<List<CommitInfo>, Exception> listCommits(final String repositoryUrl, final String branch, final int page) {
+    public Either<List<CommitInfo>, Exception> listCommits(final String user, final String repName, final String branch, final int page) {
+        final String repositoryUrl = BASE_URL + user + "/" + repName + ".git";
         final String dir = GitClientImpl.getDirectoryFromURl(repositoryUrl).get();
         final Either<List<CommitInfo>, Exception> setupResult = setUpCommitList(repositoryUrl, branch);
         if (setupResult.isRight()) {
             return setupResult;
         }
-        return gitClient.processLog(dir, this::processLogLine, page * configuration.getPageSize(), configuration.getPageSize());
+        return gitClient.processLog(dir, this::processLogLine, (page - 1) * configuration.getPageSize(), configuration.getPageSize());
     }
 
 }

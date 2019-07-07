@@ -23,7 +23,7 @@ public class CommitClientTests {
 
         CommandLineCommitClient cmdCommitClient = CommandLineCommitClient.getInstance(configuration);
 
-        Either<List<CommitInfo>, Exception> commits = cmdCommitClient.listCommits("https://github.com/pmalipio/commitviewer.git", "master");
+        Either<List<CommitInfo>, Exception> commits = cmdCommitClient.listCommits("pmalipio", "commitviewer", "master");
         assertThat(commits.isLeft());
         assertThat(commits.left().get()).size().isGreaterThan(0);
     }
@@ -36,7 +36,7 @@ public class CommitClientTests {
                 .build();
 
         CommandLineCommitClient cmdCommitClient = CommandLineCommitClient.getInstance(configuration);
-        Either<List<CommitInfo>, Exception> commits = cmdCommitClient.listCommits("https://github.com/typelevel/cats.git", "master");
+        Either<List<CommitInfo>, Exception> commits = cmdCommitClient.listCommits("typelevel", "cats", "master");
         assertThat(commits.isRight());
         assertThat(commits.right().get()).isInstanceOf(TimeoutException.class);
     }
@@ -49,7 +49,7 @@ public class CommitClientTests {
                 .build();
 
         CommandLineCommitClient cmdCommitClient = CommandLineCommitClient.getInstance(configuration);
-        Either<List<CommitInfo>, Exception> commits = cmdCommitClient.listCommits("https://github.com/typelevel/cats.git", "master", 3);
+        Either<List<CommitInfo>, Exception> commits = cmdCommitClient.listCommits("typelevel", "cats", "master", 3);
         assertThat(commits.isLeft());
         assertThat(commits.left().get()).size().isEqualTo(10);
     }

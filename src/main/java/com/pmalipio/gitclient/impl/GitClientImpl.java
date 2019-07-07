@@ -64,7 +64,7 @@ public class GitClientImpl<T> implements GitClient {
         return CommandLineParams.builder()
                 .withWorkingDirectory(configuration.getBaseDirectory() + "/" + repositoryDir)
                 .withTimeout(configuration.getCommandExecutionTimeout())
-                .withCommand("git","log", "--pretty=format:'{\"commit\": \"%H\",  \"author\": \"%aN <%aE>\",  \"date\": \"%ad\",  \"message\": \"%f\"}'");
+                .withCommand("git","log", "--pretty=format: {\"commit\": \"%H\",  \"author\": \"%aN <%aE>\",  \"date\": \"%ad\",  \"message\": \"%f\"}");
     }
 
     @Override
@@ -78,6 +78,7 @@ public class GitClientImpl<T> implements GitClient {
         CommandLineParams logCmd = getParamsBuilderForLogProcessor(repositoryDir, logProcessor)
                 .withSkip(skip)
                 .withLimit(limit)
+                .withLineProcessor(logProcessor)
                 .build();
         return configuration.getCommandLineExecutor().runCommand(logCmd);
     }

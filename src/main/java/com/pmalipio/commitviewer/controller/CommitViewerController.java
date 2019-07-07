@@ -14,10 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class CommitViewerController {
 
     private static final Logger logger = LoggerFactory.getLogger(CommitViewerController.class);
@@ -26,24 +27,25 @@ public class CommitViewerController {
 
     public CommitViewerController() {
         final CommitClientConfiguration configuration = CommitClientConfiguration.builder()
-                .withPageSize(10)
-                .withTimeout(2)
+                .withPageSize(30)
+                .withTimeout(10)
                 .build();
         this.commitClient = CommandLineCommitClient.getInstance(configuration);
     }
 
-    @GetMapping("/commits")
-    public List<CommitInfo> getCommits(@RequestParam(value = "url") final String repositoryUrl,
-                                       @RequestParam(value = "branch", required = false) final String branchp,
+    @GetMapping("/repos/{user}/{repname}/commits")
+    public List<CommitInfo> getCommits(@PathVariable final String user,
+                                       @PathVariable final String repname,
+                                       @RequestParam(value = "sha", required = false) final String sha,
                                        @RequestParam(value = "page", required = false) final Integer page) {
 
-        final String branch = branchp == null ? "master" : branchp;
+        final String branch = sha == null ? "master" : sha;
 
-        logger.info("Commits requested for Repository: {} and Branch: {}", repositoryUrl ,branch);
+        logger.info("Commits requested for Repository: {} and Branch: {}", repname ,branch);
 
-        final Either<List<CommitInfo>, Exception> result = page != null ? commitClient.listCommits(repositoryUrl, branch, page)
-                : commitClient.listCommits(repositoryUrl, branch);
-        
+        final Either<List<CommitInfo>, Exception> result = page != null ? commitClient.listCommits(user, repname, branch, page)
+                : commitClient.listCommits(user, repname, branch);
+
         if (result.isRight()) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Could not list commits due to an internal error.", result.right().get());
