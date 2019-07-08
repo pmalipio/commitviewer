@@ -17,8 +17,6 @@ public class CommitInfo {
     private String date;
     private String message;
 
-    public CommitInfo() {}
-
     public String getCommit() {
         return commit;
     }

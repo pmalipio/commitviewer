@@ -31,7 +31,7 @@ public class FallbackClientTests {
 
         final FallbackClient fallbackClient = FallbackClient.from(new GithubCommitClient(), CommandLineCommitClient.from(configuration));
         Either<Exception, List<CommitInfo>> commits = fallbackClient.listCommits("pmalipio", "rabbitflow", "master");
-        assertThat(commits.isRight());
+        assertThat(commits.isRight()).isTrue();
         assertThat(commits.right().get()).size().isGreaterThan(0);
     }
 
@@ -44,7 +44,7 @@ public class FallbackClientTests {
 
         final FallbackClient fallbackClient = FallbackClient.from(new FailClient(), CommandLineCommitClient.from(configuration));
         Either<Exception, List<CommitInfo>> commits = fallbackClient.listCommits("typelevel", "cats", "master");
-        assertThat(commits.isRight());
+        assertThat(commits.isRight()).isTrue();
         assertThat(commits.right().get()).size().isGreaterThan(0);
     }
 

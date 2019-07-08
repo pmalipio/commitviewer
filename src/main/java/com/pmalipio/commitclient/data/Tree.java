@@ -31,7 +31,7 @@ public class Tree {
     @JsonProperty("url")
     private String url;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     @JsonProperty("sha")
     public String getSha() {

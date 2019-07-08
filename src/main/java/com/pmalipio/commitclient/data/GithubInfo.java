@@ -47,13 +47,13 @@ public class GithubInfo {
     @JsonProperty("comments_url")
     private String commentsUrl;
     @JsonProperty("author")
-    private Author_ author;
+    private Author author;
     @JsonProperty("committer")
-    private Committer_ committer;
+    private Committer committer;
     @JsonProperty("parents")
     private List<Parent> parents = null;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     @JsonProperty("sha")
     public String getSha() {
@@ -116,22 +116,22 @@ public class GithubInfo {
     }
 
     @JsonProperty("author")
-    public Author_ getAuthor() {
+    public Author getAuthor() {
         return author;
     }
 
     @JsonProperty("author")
-    public void setAuthor(Author_ author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 
     @JsonProperty("committer")
-    public Committer_ getCommitter() {
+    public Committer getCommitter() {
         return committer;
     }
 
     @JsonProperty("committer")
-    public void setCommitter(Committer_ committer) {
+    public void setCommitter(Committer committer) {
         this.committer = committer;
     }
 

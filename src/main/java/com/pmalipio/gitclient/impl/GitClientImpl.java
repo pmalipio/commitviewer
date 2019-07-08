@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  *
  * @param <T> return type for output transformation.
  */
-public class GitClientImpl<T> implements GitClient {
+public class GitClientImpl implements GitClient {
 
     private final GitClientConfiguration configuration;
 
@@ -56,7 +56,7 @@ public class GitClientImpl<T> implements GitClient {
         }
 
         try {
-            FileUtils.deleteDirectory(new File(configuration.getBaseDirectory() + "/" + dirOpt.get()));
+            FileUtils.deleteDirectory(new File(configuration.getBaseDirectory() + File.pathSeparator + dirOpt.get()));
         } catch (IOException e) {
             return Either.left(e);
         }
@@ -86,6 +86,7 @@ public class GitClientImpl<T> implements GitClient {
         return CommandLineParams.builder()
                 .withWorkingDirectory(configuration.getBaseDirectory() + "/" + repositoryDir)
                 .withTimeout(configuration.getCommandExecutionTimeout())
+                .withLineProcessor(logProcessor)
                 .withCommand("git","log", "--pretty=format: {\"commit\": \"%H\",  \"author\": \"%aN <%aE>\",  \"date\": \"%ad\",  \"message\": \"%f\"}");
     }
 

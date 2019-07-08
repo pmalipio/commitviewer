@@ -32,9 +32,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Commit {
 
     @JsonProperty("author")
-    private Author author;
+    private CommitAuthor author;
     @JsonProperty("committer")
-    private Committer committer;
+    private CommitCommitter committer;
     @JsonProperty("message")
     private String message;
     @JsonProperty("tree")
@@ -46,25 +46,25 @@ public class Commit {
     @JsonProperty("verification")
     private Verification verification;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     @JsonProperty("author")
-    public Author getAuthor() {
+    public CommitAuthor getAuthor() {
         return author;
     }
 
     @JsonProperty("author")
-    public void setAuthor(Author author) {
+    public void setAuthor(CommitAuthor author) {
         this.author = author;
     }
 
     @JsonProperty("committer")
-    public Committer getCommitter() {
+    public CommitCommitter getCommitter() {
         return committer;
     }
 
     @JsonProperty("committer")
-    public void setCommitter(Committer committer) {
+    public void setCommitter(CommitCommitter committer) {
         this.committer = committer;
     }
 

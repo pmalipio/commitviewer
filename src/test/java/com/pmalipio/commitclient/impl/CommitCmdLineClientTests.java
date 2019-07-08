@@ -32,7 +32,7 @@ public class CommitCmdLineClientTests {
         CommandLineCommitClient cmdCommitClient = CommandLineCommitClient.from(configuration);
 
         Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("pmalipio", "rabbitflow", "master");
-        assertThat(commits.isRight());
+        assertThat(commits.isRight()).isTrue();
         assertThat(commits.right().get()).size().isGreaterThan(0);
     }
 
@@ -45,7 +45,7 @@ public class CommitCmdLineClientTests {
 
         CommandLineCommitClient cmdCommitClient = CommandLineCommitClient.from(configuration);
         Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("scala", "scala", "master");
-        assertThat(commits.isLeft());
+        assertThat(commits.isLeft()).isTrue();
         assertThat(commits.left().get()).isInstanceOf(TimeoutException.class);
     }
 
@@ -58,7 +58,7 @@ public class CommitCmdLineClientTests {
 
         CommandLineCommitClient cmdCommitClient = CommandLineCommitClient.from(configuration);
         Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("typelevel", "cats", "master", 3);
-        assertThat(commits.isRight());
+        assertThat(commits.isRight()).isTrue();
         assertThat(commits.right().get()).size().isEqualTo(10);
     }
 }

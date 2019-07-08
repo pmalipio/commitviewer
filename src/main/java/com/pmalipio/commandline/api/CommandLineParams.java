@@ -165,9 +165,8 @@ public class CommandLineParams<T> {
         }
 
         public CommandLineParams build() {
-            CommandLineParams commandLineParams = new CommandLineParams(workingDirectory, lineProcessor, skip, limit,
+            return new CommandLineParams(workingDirectory, lineProcessor, skip, limit,
                     timeout, command);
-            return commandLineParams;
         }
     }
 }

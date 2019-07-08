@@ -15,13 +15,12 @@ import com.pmalipio.commandline.impl.CommandLineExecutorImpl;
 import com.pmalipio.commitclient.api.CommitClient;
 import com.pmalipio.commitclient.api.CommitClientConfiguration;
 import com.pmalipio.commitclient.data.CommitInfo;
+import com.pmalipio.commitclient.exceptions.InvalidLineException;
 import com.pmalipio.gitclient.api.GitClient;
 import com.pmalipio.gitclient.api.GitClientConfiguration;
 import com.pmalipio.gitclient.exceptions.DirectoryParseError;
 import com.pmalipio.gitclient.impl.GitClientImpl;
 import io.atlassian.fugue.Either;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -32,9 +31,8 @@ import java.util.Optional;
  * Command line based commit client implementation.
  */
 public class CommandLineCommitClient implements CommitClient {
-    private static final Logger logger = LoggerFactory.getLogger(CommandLineCommitClient.class);
-
     private static final String BASE_URL = "https://github.com/";
+    private static final String DIRECTORY_ERROR_MESSAGE = "Could not extract the directory from the github url";
 
     private final GitClient<CommitInfo> gitClient;
     private final CommitClientConfiguration configuration;
@@ -65,7 +63,7 @@ public class CommandLineCommitClient implements CommitClient {
         }
         final Optional<String> dirOpt = GitClientImpl.getDirectoryFromURl(repositoryUrl);
         if (!dirOpt.isPresent()) {
-            return Either.left(new DirectoryParseError("Could not extract the directory from the github url"));
+            return Either.left(new DirectoryParseError(DIRECTORY_ERROR_MESSAGE));
         }
 
         final Either<Exception, List<String>> checkoutResult = gitClient.checkout(dirOpt.get(), branch);
@@ -78,10 +76,9 @@ public class CommandLineCommitClient implements CommitClient {
     private CommitInfo processLogLine(final String line) {
         final ObjectMapper mapper = new ObjectMapper();
         try {
-            CommitInfo commitInfo = mapper.readValue(line, CommitInfo.class);
-            return commitInfo;
+            return mapper.readValue(line, CommitInfo.class);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse line: " + line);
+            throw new InvalidLineException("Failed to parse line: " + line);
         }
     }
 
@@ -94,7 +91,7 @@ public class CommandLineCommitClient implements CommitClient {
         }
         final Optional<String> dirOpt = GitClientImpl.getDirectoryFromURl(repositoryUrl);
         if (!dirOpt.isPresent()) {
-            return Either.left(new DirectoryParseError("Could not extract the directory from the github url"));
+            return Either.left(new DirectoryParseError(DIRECTORY_ERROR_MESSAGE));
         }
         return gitClient.processLog(dirOpt.get(), this::processLogLine);
     }
@@ -108,7 +105,7 @@ public class CommandLineCommitClient implements CommitClient {
         }
         final Optional<String> dirOpt = GitClientImpl.getDirectoryFromURl(repositoryUrl);
         if (!dirOpt.isPresent()) {
-            return Either.left(new DirectoryParseError("Could not extract the directory from the github url"));
+            return Either.left(new DirectoryParseError(DIRECTORY_ERROR_MESSAGE));
         }
         return gitClient.processLog(dirOpt.get(), this::processLogLine, (page - 1) * configuration.getPageSize(), configuration.getPageSize());
     }

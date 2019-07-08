@@ -38,7 +38,7 @@ public class GitClientTests {
     @Test
     public void directoryFromUrlTest() {
         final Optional<String> dir = GitClientImpl.getDirectoryFromURl("https://github.com/pmalipio/rabbitflow.git");
-        assertThat(dir.isPresent());
+        assertThat(dir.isPresent()).isTrue();
         assertThat(dir.get()).isEqualTo("rabbitflow");
     }
 
@@ -46,7 +46,7 @@ public class GitClientTests {
     public void cloneRepositoryTest() {
         final String url = "https://github.com/pmalipio/rabbitflow.git";
         final Either<Exception, List<String>> cloneResult = gitClient.cloneRepository(url);
-        assertThat(cloneResult.isRight());
+        assertThat(cloneResult.isRight()).isTrue();
 
         final CommandLineParams ls = CommandLineParams.builder()
                 .withWorkingDirectory(System.getProperty("java.io.tmpdir") + "/" + GitClientImpl.getDirectoryFromURl(url).get())
@@ -63,7 +63,7 @@ public class GitClientTests {
         gitClient.cloneRepository(url);
 
         final Either<Exception, List<String>> checkout = gitClient.checkout(GitClientImpl.getDirectoryFromURl(url).get(),"master");
-        assertThat(checkout.isLeft());
+        assertThat(checkout.isLeft()).isTrue();
     }
 
     @Test
@@ -73,11 +73,11 @@ public class GitClientTests {
         gitClient.cloneRepository(url);
         gitClient.checkout(dir,"master");
         Either<Exception, List<String>> logResult = gitClient.processLog(dir, x -> x);
-        assertThat(logResult.isRight());
+        assertThat(logResult.isRight()).isTrue();
         assertThat(logResult.right().get()).size().isGreaterThan(0);
 
         Either<Exception, List<String>> logResult2 = gitClient.processLog(dir, x -> x, 1, 2);
-        assertThat(logResult2.isRight());
+        assertThat(logResult2.isRight()).isTrue();
         assertThat(logResult2.right().get()).size().isEqualTo(2);
     }
 }

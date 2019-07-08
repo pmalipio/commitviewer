@@ -20,8 +20,6 @@ import java.util.concurrent.*;
 
 public class CommandLineExecutorImpl<T> implements CommandLineExecutor {
 
-    public CommandLineExecutorImpl() {}
-
     @Override
     public Either<Exception, List<T>> runCommand(final CommandLineParams commandLineParams) {
 

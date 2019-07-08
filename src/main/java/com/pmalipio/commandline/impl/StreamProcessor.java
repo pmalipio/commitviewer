@@ -52,10 +52,10 @@ public class StreamProcessor<T> implements Supplier<List<T>> {
         final Stream<String> lines = bufferedReader.lines();
 
         final Stream<String> skipStream = Optional.ofNullable(skip)
-                .map(l -> lines.skip(l)).orElse(lines);
+                .map(lines::skip).orElse(lines);
 
         final Stream<String> limitStream = Optional.ofNullable(limit)
-                .map(l -> skipStream.limit(l)).orElse(skipStream);
+                .map(skipStream::limit).orElse(skipStream);
 
         final Function<String, T> lineProcessor = commandLineParams.getLineProcessor();
 

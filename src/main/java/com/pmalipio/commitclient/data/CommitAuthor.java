@@ -21,62 +21,49 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "verified",
-    "reason",
-    "signature",
-    "payload"
+    "name",
+    "email",
+    "date"
 })
-public class Verification {
+public class CommitAuthor {
 
-    @JsonProperty("verified")
-    private Boolean verified;
-    @JsonProperty("reason")
-    private String reason;
-    @JsonProperty("signature")
-    private Object signature;
-    @JsonProperty("payload")
-    private Object payload;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("email")
+    private String email;
+    @JsonProperty("date")
+    private String date;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<>();
 
-    @JsonProperty("verified")
-    public Boolean getVerified() {
-        return verified;
+    @JsonProperty("name")
+    public String getName() {
+        return name;
     }
 
-    @JsonProperty("verified")
-    public void setVerified(Boolean verified) {
-        this.verified = verified;
+    @JsonProperty("name")
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @JsonProperty("reason")
-    public String getReason() {
-        return reason;
+    @JsonProperty("email")
+    public String getEmail() {
+        return email;
     }
 
-    @JsonProperty("reason")
-    public void setReason(String reason) {
-        this.reason = reason;
+    @JsonProperty("email")
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    @JsonProperty("signature")
-    public Object getSignature() {
-        return signature;
+    @JsonProperty("date")
+    public String getDate() {
+        return date;
     }
 
-    @JsonProperty("signature")
-    public void setSignature(Object signature) {
-        this.signature = signature;
-    }
-
-    @JsonProperty("payload")
-    public Object getPayload() {
-        return payload;
-    }
-
-    @JsonProperty("payload")
-    public void setPayload(Object payload) {
-        this.payload = payload;
+    @JsonProperty("date")
+    public void setDate(String date) {
+        this.date = date;
     }
 
     @JsonAnyGetter
