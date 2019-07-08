@@ -13,16 +13,8 @@ import java.util.stream.Stream;
 
 public class GithubCommitClient implements CommitClient {
     private static final String BASE_URL = "https://api.github.com/repos/";
-    private static GithubCommitClient instance;
 
-    public static GithubCommitClient getInstance() {
-        if(instance == null) {
-            instance = new GithubCommitClient();
-        }
-        return instance;
-    }
-
-    private GithubCommitClient() {
+    public GithubCommitClient() {
     }
 
     private CommitInfo toCommitInfo(final GithubInfo githubInfo) {
@@ -35,30 +27,30 @@ public class GithubCommitClient implements CommitClient {
     }
 
     @Override
-    public Either<List<CommitInfo>, Exception> listCommits(String user, String repname, String branch) {
+    public Either<Exception, List<CommitInfo>> listCommits(String user, String repname, String branch) {
         final RestTemplate restTemplate = new RestTemplate();
         try {
             final GithubInfo[] gitHubResults = restTemplate.getForObject(BASE_URL + user + "/" + repname + "/commits?sha=" + branch, GithubInfo[].class);
             final List<CommitInfo> commitInfoList = Stream.of(gitHubResults)
                     .map(this::toCommitInfo)
                     .collect(Collectors.toList());
-            return Either.left(commitInfoList);
+            return Either.right(commitInfoList);
         } catch (Exception e) {
-            return Either.right(e);
+            return Either.left(e);
         }
     }
 
     @Override
-    public Either<List<CommitInfo>, Exception> listCommits(String user, String repname, String branch, int page) {
+    public Either<Exception, List<CommitInfo>> listCommits(String user, String repname, String branch, int page) {
         final RestTemplate restTemplate = new RestTemplate();
         try {
             final  GithubInfo[] gitHubResults = restTemplate.getForObject(BASE_URL + user + "/" + repname + "/commits?sha=" + branch + "&page=" + page, GithubInfo[].class);
             final List<CommitInfo> commitInfoList = Stream.of(gitHubResults)
                     .map(this::toCommitInfo)
                     .collect(Collectors.toList());
-            return Either.left(commitInfoList);
+            return Either.right(commitInfoList);
         } catch (Exception e) {
-            return Either.right(e);
+            return Either.left(e);
         }
     }
 }

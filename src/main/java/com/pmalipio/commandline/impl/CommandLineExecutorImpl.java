@@ -11,20 +11,10 @@ import java.util.concurrent.*;
 
 public class CommandLineExecutorImpl<T> implements CommandLineExecutor {
 
-    private static CommandLineExecutor instance;
-
-    private CommandLineExecutorImpl() {
-    }
-
-    public static CommandLineExecutor getInstance() {
-        if(instance == null) {
-            instance = new CommandLineExecutorImpl();
-        }
-        return instance;
-    }
+    public CommandLineExecutorImpl() {}
 
     @Override
-    public Either<List<T>, Exception> runCommand(CommandLineParams commandLineParams) {
+    public Either<Exception, List<T>> runCommand(final CommandLineParams commandLineParams) {
 
         final ProcessBuilder builder = new ProcessBuilder()
                 .command(commandLineParams.getCommand())
@@ -39,9 +29,9 @@ public class CommandLineExecutorImpl<T> implements CommandLineExecutor {
 
             List<T> result = futureResult.get(commandLineParams.getTimeout(), TimeUnit.SECONDS);
 
-            return Either.left(result);
+            return Either.right(result);
         } catch (Exception e) {
-            return Either.right(e);
+            return Either.left(e);
         }
 
     }

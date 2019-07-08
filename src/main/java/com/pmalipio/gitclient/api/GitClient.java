@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public interface GitClient<T> {
-    Either<List<String>, Exception> cloneRepository(String url);
+    Either<Exception, List<String>> cloneRepository(String url);
 
     /**
      *
@@ -15,9 +15,9 @@ public interface GitClient<T> {
      * @param branch
      * @return
      */
-    Either<List<String>, Exception> checkout(String repositoryDir, String branch);
+    Either<Exception, List<String>> checkout(String repositoryDir, String branch);
 
-    Either<List<T>, Exception> processLog(String repositoryDir, Function<String, T> logProcessor);
+    Either<Exception, List<T>> processLog(String repositoryDir, Function<String, T> logProcessor);
 
-    Either<List<T>, Exception> processLog(String repositoryDir, Function<String, T> logProcessor, int skip, int limit);
+    Either<Exception, List<T>> processLog(String repositoryDir, Function<String, T> logProcessor, int skip, int limit);
 }

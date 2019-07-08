@@ -28,10 +28,18 @@ public class StreamProcessor<T> implements Supplier<List<T>> {
 
     @Override
     public List<T> get() {
-        final Stream<String> lines = new BufferedReader(new InputStreamReader(inputStream)).lines();
-        final Stream<String> skipStream = Optional.ofNullable(commandLineParams.getSkip())
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+        final Integer skip = commandLineParams.getSkip();
+
+        final Integer limit = commandLineParams.getLimit();
+
+        final Stream<String> lines = bufferedReader.lines();
+
+        final Stream<String> skipStream = Optional.ofNullable(skip)
                 .map(l -> lines.skip(l)).orElse(lines);
-        final Stream<String> limitStream = Optional.ofNullable(commandLineParams.getLimit())
+
+        final Stream<String> limitStream = Optional.ofNullable(limit)
                 .map(l -> skipStream.limit(l)).orElse(skipStream);
 
         final Function<String, T> lineProcessor = commandLineParams.getLineProcessor();

@@ -32,7 +32,7 @@ public class GitClientConfiguration {
     }
 
     public static final class GitClientConfigurationBuilder {
-        private CommandLineExecutor commandLineExecutor = CommandLineExecutorImpl.getInstance(); // default command line executor
+        private CommandLineExecutor commandLineExecutor = new CommandLineExecutorImpl(); // default command line executor
         private Integer commandExecutionTimeout = 10; // default timeout in seconds
         private String baseDirectory = System.getProperty("java.io.tmpdir"); // default is tmp
 

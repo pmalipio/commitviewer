@@ -21,8 +21,8 @@ public class GitClientTests {
 
     @Before
     public void setup() {
-        this.commandLineExecutor = CommandLineExecutorImpl.getInstance();
-        this.gitClient = GitClientImpl.getInstance(GitClientConfiguration.builder().build());
+        this.commandLineExecutor = new CommandLineExecutorImpl();
+        this.gitClient = GitClientImpl.from(GitClientConfiguration.builder().build());
     }
 
     @Test
@@ -35,16 +35,16 @@ public class GitClientTests {
     @Test
     public void cloneRepositoryTest() {
         final String url = "https://github.com/pmalipio/commitviewer.git";
-        final Either<List<String>, Exception> cloneResult = gitClient.cloneRepository(url);
-        assertThat(cloneResult.isLeft());
+        final Either<Exception, List<String>> cloneResult = gitClient.cloneRepository(url);
+        assertThat(cloneResult.isRight());
 
         final CommandLineParams ls = CommandLineParams.builder()
                 .withWorkingDirectory(System.getProperty("java.io.tmpdir") + "/" + GitClientImpl.getDirectoryFromURl(url).get())
                 .withCommand("ls")
                 .build();
 
-        final Either<List<String>, Exception>  lsResult = commandLineExecutor.runCommand(ls);
-        assertThat(lsResult.left().get()).size().isGreaterThan(0);
+        final Either<Exception, List<String>>  lsResult = commandLineExecutor.runCommand(ls);
+        assertThat(lsResult.right().get()).size().isGreaterThan(0);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class GitClientTests {
         final String url = "https://github.com/pmalipio/commitviewer.git";
         gitClient.cloneRepository(url);
 
-        final Either<List<String>, Exception> checkout = gitClient.checkout(GitClientImpl.getDirectoryFromURl(url).get(),"master");
+        final Either<Exception, List<String>> checkout = gitClient.checkout(GitClientImpl.getDirectoryFromURl(url).get(),"master");
         assertThat(checkout.isLeft());
     }
 
@@ -62,12 +62,12 @@ public class GitClientTests {
         final String dir = GitClientImpl.getDirectoryFromURl(url).get();
         gitClient.cloneRepository(url);
         gitClient.checkout(dir,"master");
-        Either<List<String>, Exception> logResult = gitClient.processLog(dir, x -> x);
-        assertThat(logResult.isLeft());
-        assertThat(logResult.left().get()).size().isGreaterThan(0);
+        Either<Exception, List<String>> logResult = gitClient.processLog(dir, x -> x);
+        assertThat(logResult.isRight());
+        assertThat(logResult.right().get()).size().isGreaterThan(0);
 
-        Either<List<String>, Exception> logResult2 = gitClient.processLog(dir, x -> x, 1, 2);
-        assertThat(logResult2.isLeft());
-        assertThat(logResult2.left().get()).size().isEqualTo(2);
+        Either<Exception, List<String>> logResult2 = gitClient.processLog(dir, x -> x, 1, 2);
+        assertThat(logResult2.isRight());
+        assertThat(logResult2.right().get()).size().isEqualTo(2);
     }
 }

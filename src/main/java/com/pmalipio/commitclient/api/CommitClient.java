@@ -8,7 +8,7 @@ import java.util.List;
 public interface CommitClient {
 
 
-    Either<List<CommitInfo>, Exception> listCommits(String user, String repname, String branch);
+    Either<Exception, List<CommitInfo>> listCommits(String user, String repname, String branch);
 
-    Either<List<CommitInfo>, Exception> listCommits(String user, String repname, String branch, int page);
+    Either<Exception, List<CommitInfo>> listCommits(String user, String repname, String branch, int page);
 }

@@ -12,18 +12,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CommitGithubClientTests {
     @Test
     public void basicTest() {
-        GithubCommitClient cmdCommitClient = GithubCommitClient.getInstance();
+        GithubCommitClient cmdCommitClient = new GithubCommitClient();
 
-        Either<List<CommitInfo>, Exception> commits = cmdCommitClient.listCommits("pmalipio", "commitviewer", "master");
-        assertThat(commits.isLeft());
-        assertThat(commits.left().get()).size().isGreaterThan(0);
+        Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("pmalipio", "commitviewer", "master");
+        assertThat(commits.isRight());
+        assertThat(commits.right().get()).size().isGreaterThan(0);
     }
 
+    @Test
     public void pageTest() {
-        GithubCommitClient cmdCommitClient = GithubCommitClient.getInstance();
+        GithubCommitClient cmdCommitClient = new GithubCommitClient();
 
-        Either<List<CommitInfo>, Exception> commits = cmdCommitClient.listCommits("pmalipio", "commitviewer", "master", 1);
-        assertThat(commits.isLeft());
-        assertThat(commits.left().get()).size().isGreaterThan(0);
+        Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("pmalipio", "commitviewer", "master", 1);
+        assertThat(commits.isRight());
+        assertThat(commits.right().get()).size().isGreaterThan(0);
+    }
+
+    @Test
+    public void heavyTest() {
+        GithubCommitClient cmdCommitClient = new GithubCommitClient();
+
+        Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("scala", "scala", "master");
+        assertThat(commits.isRight());
+        assertThat(commits.right().get()).size().isGreaterThan(0);
     }
 }

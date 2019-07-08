@@ -5,5 +5,5 @@ import io.atlassian.fugue.Either;
 import java.util.List;
 
 public interface CommandLineExecutor<T> {
-    Either<List<T>, Exception> runCommand(CommandLineParams commandLineParams);
+    Either<Exception, List<T>> runCommand(CommandLineParams commandLineParams);
 }

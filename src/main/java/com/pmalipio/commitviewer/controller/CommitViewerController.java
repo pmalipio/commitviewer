@@ -31,8 +31,8 @@ public class CommitViewerController {
                 .withPageSize(30)
                 .withTimeout(10)
                 .build();
-        //this.commitClient = CommandLineCommitClient.getInstance(configuration);
-        this.commitClient = GithubCommitClient.getInstance();
+        //this.commitClient = CommandLineCommitClient.from(configuration);
+        this.commitClient = new GithubCommitClient();
     }
 
     @GetMapping("/repos/{user}/{repname}/commits")
@@ -45,14 +45,10 @@ public class CommitViewerController {
 
         logger.info("Commits requested for Repository: {} and Branch: {}", repname ,branch);
 
-        final Either<List<CommitInfo>, Exception> result = page != null ? commitClient.listCommits(user, repname, branch, page)
+        final Either<Exception, List<CommitInfo>> result = page != null ? commitClient.listCommits(user, repname, branch, page)
                 : commitClient.listCommits(user, repname, branch);
 
-        if (result.isRight()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Could not list commits due to an internal error.", result.right().get());
-        } else {
-            return result.left().get();
-        }
+        return result.getOrThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "Could not list commits due to an internal error.", result.left().get()));
     }
 }
