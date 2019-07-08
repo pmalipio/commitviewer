@@ -23,7 +23,7 @@ public class CommitGithubClientTests {
     public void basicTest() {
         GithubCommitClient cmdCommitClient = new GithubCommitClient();
 
-        Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("pmalipio", "commitviewer", "master");
+        Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("pmalipio", "rabbitflow", "master");
         assertThat(commits.isRight());
         assertThat(commits.right().get()).size().isGreaterThan(0);
     }
@@ -32,7 +32,7 @@ public class CommitGithubClientTests {
     public void pageTest() {
         GithubCommitClient cmdCommitClient = new GithubCommitClient();
 
-        Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("pmalipio", "commitviewer", "master", 1);
+        Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("pmalipio", "rabbitflow", "master", 1);
         assertThat(commits.isRight());
         assertThat(commits.right().get()).size().isGreaterThan(0);
     }

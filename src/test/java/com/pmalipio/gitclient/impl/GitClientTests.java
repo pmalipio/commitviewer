@@ -37,14 +37,14 @@ public class GitClientTests {
 
     @Test
     public void directoryFromUrlTest() {
-        final Optional<String> dir = GitClientImpl.getDirectoryFromURl("https://github.com/pmalipio/commitviewer.git");
+        final Optional<String> dir = GitClientImpl.getDirectoryFromURl("https://github.com/pmalipio/rabbitflow.git");
         assertThat(dir.isPresent());
-        assertThat(dir.get()).isEqualTo("commitviewer");
+        assertThat(dir.get()).isEqualTo("rabbitflow");
     }
 
     @Test
     public void cloneRepositoryTest() {
-        final String url = "https://github.com/pmalipio/commitviewer.git";
+        final String url = "https://github.com/pmalipio/rabbitflow.git";
         final Either<Exception, List<String>> cloneResult = gitClient.cloneRepository(url);
         assertThat(cloneResult.isRight());
 
@@ -59,7 +59,7 @@ public class GitClientTests {
 
     @Test
     public void checkoutTest() {
-        final String url = "https://github.com/pmalipio/commitviewer.git";
+        final String url = "https://github.com/pmalipio/rabbitflow.git";
         gitClient.cloneRepository(url);
 
         final Either<Exception, List<String>> checkout = gitClient.checkout(GitClientImpl.getDirectoryFromURl(url).get(),"master");
@@ -68,7 +68,7 @@ public class GitClientTests {
 
     @Test
     public void logProcessorTest() {
-        final String url = "https://github.com/pmalipio/commitviewer.git";
+        final String url = "https://github.com/pmalipio/rabbitflow.git";
         final String dir = GitClientImpl.getDirectoryFromURl(url).get();
         gitClient.cloneRepository(url);
         gitClient.checkout(dir,"master");

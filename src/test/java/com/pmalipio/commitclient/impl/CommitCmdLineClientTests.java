@@ -31,7 +31,7 @@ public class CommitCmdLineClientTests {
 
         CommandLineCommitClient cmdCommitClient = CommandLineCommitClient.from(configuration);
 
-        Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("pmalipio", "commitviewer", "master");
+        Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("pmalipio", "rabbitflow", "master");
         assertThat(commits.isRight());
         assertThat(commits.right().get()).size().isGreaterThan(0);
     }
