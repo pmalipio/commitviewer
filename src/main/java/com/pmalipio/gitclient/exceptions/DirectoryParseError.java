@@ -8,19 +8,14 @@
  * without fee. Permission to modify the code and to distribute modified
  * code is also granted without any restrictions.
  */
-package com.pmalipio.commitviewer;
+package com.pmalipio.gitclient.exceptions;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+/**
+ * Exception for github url directory parsing errors.
+ */
+public class DirectoryParseError extends RuntimeException {
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class CommitviewerApplicationTests {
-
-    @Test
-    public void contextLoads() {
+    public DirectoryParseError(String s) {
+        super(s);
     }
-
 }

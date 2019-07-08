@@ -1,16 +1,59 @@
+/*
+ * Copyright (c) 2019.  Pedro Alípio, All Rights Reserved.
+ *
+ * This material is provided "as is", with absolutely no warranty expressed
+ * or implied. Any use is at your own risk.
+ *
+ * Permission to use or copy this software for any purpose is hereby granted
+ * without fee. Permission to modify the code and to distribute modified
+ * code is also granted without any restrictions.
+ */
 package com.pmalipio.commandline.api;
 
 import org.springframework.lang.Nullable;
 import java.util.function.Function;
 
+/**
+ * The command line parameters.
+ *
+ * @param <T> The type used by line processor output.
+ */
 public class CommandLineParams<T> {
+    /**
+     * The working directory where commands are executed.
+     */
     private String workingDirectory;
+
+    /**
+     * The line processor which may transform each output line in something else.
+     */
     private Function<String, T> lineProcessor;
+
+    /**
+     * The skipped results.
+     */
     private Integer skip;
+
+    /**
+     * The results limit.
+     */
     private Integer limit;
-    private Integer timeout; // in seconds
+
+    /**
+     * The command execution timeout in seconds.
+     */
+    private Integer timeout;
+
+    /**
+     * The commmand and its arguments.
+     */
     private String[] command;
 
+    /**
+     * Gets a builder to build an instance.
+     *
+     * @return a builder.
+     */
     public static CommandLineParamsBuilder builder() {
         return new CommandLineParamsBuilder();
     }
@@ -26,26 +69,56 @@ public class CommandLineParams<T> {
         this.command = command;
     }
 
+    /**
+     * Gets the working directory.
+     *
+     * @return the working directory.
+     */
     public String getWorkingDirectory() {
         return workingDirectory;
     }
 
+    /**
+     * Gets the line processor function.
+     *
+     * @return the line processor function.
+     */
     public Function<String, T>   getLineProcessor() {
         return lineProcessor;
     }
 
+    /**
+     * Gets the skip value.
+     *
+     * @return the skip value.
+     */
     public Integer getSkip() {
         return skip;
     }
 
+    /**
+     * Gets the limit value.
+     *
+     * @return the limit value.
+     */
     public Integer getLimit() {
         return limit;
     }
 
+    /**
+     * Gets the command array.
+     *
+     * @return the command array.
+     */
     public String[] getCommand() {
         return command;
     }
 
+    /**
+     * Gets the timeout value.
+     *
+     * @return timeout value.
+     */
     public Integer getTimeout() {
         return timeout;
     }

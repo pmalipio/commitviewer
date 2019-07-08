@@ -1,8 +1,19 @@
+/*
+ * Copyright (c) 2019.  Pedro Alípio, All Rights Reserved.
+ *
+ * This material is provided "as is", with absolutely no warranty expressed
+ * or implied. Any use is at your own risk.
+ *
+ * Permission to use or copy this software for any purpose is hereby granted
+ * without fee. Permission to modify the code and to distribute modified
+ * code is also granted without any restrictions.
+ */
 package com.pmalipio.gitclient.impl;
 
 import com.pmalipio.commandline.api.CommandLineParams;
 import com.pmalipio.gitclient.api.GitClient;
 import com.pmalipio.gitclient.api.GitClientConfiguration;
+import com.pmalipio.gitclient.exceptions.DirectoryParseError;
 import io.atlassian.fugue.Either;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
@@ -14,6 +25,11 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Git client implementation
+ *
+ * @param <T> return type for output transformation.
+ */
 public class GitClientImpl<T> implements GitClient {
 
     private final GitClientConfiguration configuration;
@@ -22,16 +38,25 @@ public class GitClientImpl<T> implements GitClient {
         this.configuration = configuration;
     }
 
+    /**
+     * Builds a git client instance.
+     *
+     * @param configuration the git client configuration.
+     * @return a {@link GitClientImpl} instance.
+     */
     public static synchronized GitClientImpl from(final GitClientConfiguration configuration) {
         return new GitClientImpl(configuration);
     }
 
     @Override
     public Either<Exception, List<String>> cloneRepository(final String url) {
-        final String dir = GitClientImpl.getDirectoryFromURl(url).get();
+        final Optional<String> dirOpt = GitClientImpl.getDirectoryFromURl(url);
+        if (!dirOpt.isPresent()) {
+            return Either.left(new DirectoryParseError("Could not extract the directory from the url"));
+        }
 
         try {
-            FileUtils.deleteDirectory(new File(configuration.getBaseDirectory() + "/" + dir));
+            FileUtils.deleteDirectory(new File(configuration.getBaseDirectory() + "/" + dirOpt.get()));
         } catch (IOException e) {
             return Either.left(e);
         }

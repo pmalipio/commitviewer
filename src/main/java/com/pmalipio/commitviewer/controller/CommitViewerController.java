@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2019.  Pedro Alípio, All Rights Reserved.
+ *
+ * This material is provided "as is", with absolutely no warranty expressed
+ * or implied. Any use is at your own risk.
+ *
+ * Permission to use or copy this software for any purpose is hereby granted
+ * without fee. Permission to modify the code and to distribute modified
+ * code is also granted without any restrictions.
+ */
 package com.pmalipio.commitviewer.controller;
 
 
@@ -10,15 +20,15 @@ import com.pmalipio.commitclient.impl.GithubCommitClient;
 import io.atlassian.fugue.Either;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
+/**
+ * The commit viewer rest controller.
+ */
 @RestController
 @RequestMapping("/api")
 public class CommitViewerController {
@@ -31,12 +41,22 @@ public class CommitViewerController {
         final CommitClient primary = new GithubCommitClient();
         final CommitClientConfiguration configuration = CommitClientConfiguration.builder()
                 .withPageSize(30)
-                .withTimeout(60)
+                .withTimeout(120)
                 .build();
         final CommitClient secondary = CommandLineCommitClient.from(configuration);
         this.commitClient = FallbackClient.from(primary, secondary);
     }
 
+    /**
+     * Gets the commits list. The arguments are kept similar to the github api for consistency.
+     * Note that is a branch is not provided it will assume the master branch.
+     *
+     * @param user    the github user.
+     * @param repname the github repository name.
+     * @param sha     the branch name.
+     * @param page    the page number.
+     * @return a List with the commit info.
+     */
     @GetMapping("/repos/{user}/{repname}/commits")
     public List<CommitInfo> getCommits(@PathVariable final String user,
                                        @PathVariable final String repname,
