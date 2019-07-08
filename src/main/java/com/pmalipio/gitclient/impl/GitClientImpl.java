@@ -87,7 +87,7 @@ public class GitClientImpl implements GitClient {
                 .withWorkingDirectory(configuration.getBaseDirectory() + "/" + repositoryDir)
                 .withTimeout(configuration.getCommandExecutionTimeout())
                 .withLineProcessor(logProcessor)
-                .withCommand("git","log", "--pretty=format: {\"commit\": \"%H\",  \"author\": \"%aN <%aE>\",  \"date\": \"%ad\",  \"message\": \"%f\"}");
+                .withCommand("git","log", "--pretty=format:commit:%H,author:%aN <%aE>,date:%ad,message:%f");
     }
 
     @Override

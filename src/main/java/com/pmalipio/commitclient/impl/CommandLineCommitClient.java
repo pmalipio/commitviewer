@@ -21,11 +21,14 @@ import com.pmalipio.gitclient.api.GitClientConfiguration;
 import com.pmalipio.gitclient.exceptions.DirectoryParseError;
 import com.pmalipio.gitclient.impl.GitClientImpl;
 import io.atlassian.fugue.Either;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Command line based commit client implementation.
@@ -74,10 +77,17 @@ public class CommandLineCommitClient implements CommitClient {
     }
 
     private CommitInfo processLogLine(final String line) {
-        final ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(line, CommitInfo.class);
-        } catch (IOException e) {
+        final String linePattern = "^commit:(.*),author:(.*),date:(.*),message:(.*)$";
+        final Pattern pattern = Pattern.compile(linePattern);
+        final Matcher matcher = pattern.matcher(line);
+        if (matcher.find()) {
+            return CommitInfo.buiilder()
+                    .withCommit(matcher.group(1))
+                    .withAuthor(matcher.group(2))
+                    .withDate((matcher.group(3)))
+                    .withMessage(matcher.group(4))
+                    .build();
+        } else {
             throw new InvalidLineException("Failed to parse line: " + line);
         }
     }

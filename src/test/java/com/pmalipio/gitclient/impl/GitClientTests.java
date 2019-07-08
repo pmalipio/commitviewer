@@ -63,7 +63,7 @@ public class GitClientTests {
         gitClient.cloneRepository(url);
 
         final Either<Exception, List<String>> checkout = gitClient.checkout(GitClientImpl.getDirectoryFromURl(url).get(),"master");
-        assertThat(checkout.isLeft()).isTrue();
+        assertThat(checkout.isRight()).isTrue();
     }
 
     @Test

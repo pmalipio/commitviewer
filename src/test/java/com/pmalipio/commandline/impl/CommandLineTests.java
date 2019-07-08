@@ -101,6 +101,6 @@ public class CommandLineTests {
         final CommandLineParams<String> params = CommandLineParams.builder()
                 .build();
         final Either<Exception, List<String>> result = cmd.runCommand(params);
-        assertThat(result.isRight()).isTrue();
+        assertThat(result.isLeft()).isTrue();
     }
 }

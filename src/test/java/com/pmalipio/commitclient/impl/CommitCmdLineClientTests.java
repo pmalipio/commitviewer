@@ -40,11 +40,11 @@ public class CommitCmdLineClientTests {
     public void timeoutTest() {
         final CommitClientConfiguration configuration = CommitClientConfiguration.builder()
                 .withPageSize(10)
-                .withTimeout(2)
+                .withTimeout(0)
                 .build();
 
         CommandLineCommitClient cmdCommitClient = CommandLineCommitClient.from(configuration);
-        Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("scala", "scala", "master");
+        Either<Exception, List<CommitInfo>> commits = cmdCommitClient.listCommits("typelevel", "cats", "master");
         assertThat(commits.isLeft()).isTrue();
         assertThat(commits.left().get()).isInstanceOf(TimeoutException.class);
     }
