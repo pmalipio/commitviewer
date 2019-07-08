@@ -10,7 +10,6 @@
  */
 package com.pmalipio.commitclient.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pmalipio.commandline.impl.CommandLineExecutorImpl;
 import com.pmalipio.commitclient.api.CommitClient;
 import com.pmalipio.commitclient.api.CommitClientConfiguration;
@@ -21,9 +20,7 @@ import com.pmalipio.gitclient.api.GitClientConfiguration;
 import com.pmalipio.gitclient.exceptions.DirectoryParseError;
 import com.pmalipio.gitclient.impl.GitClientImpl;
 import io.atlassian.fugue.Either;
-import org.apache.commons.lang3.StringEscapeUtils;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
