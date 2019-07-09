@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Processes the command output stream.
+ * Processes the command output.
  *
  * @param <T> The result list type.
  */
@@ -31,6 +31,13 @@ public class StreamProcessor<T> implements Supplier<List<T>> {
     private final InputStream inputStream;
     private final CommandLineParams commandLineParams;
 
+    /**
+     * Builds a {@link StreamProcessor} instance.
+     *
+     * @param inputStream       The input stream.
+     * @param commandLineParams The command line execution parameters.
+     * @return a {@link StreamProcessor} instance.
+     */
     public static final StreamProcessor from(final InputStream inputStream, final CommandLineParams commandLineParams) {
         return new StreamProcessor(inputStream, commandLineParams);
     }

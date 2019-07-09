@@ -17,9 +17,13 @@ import com.pmalipio.commitclient.data.CommitInfo;
 import com.pmalipio.commitclient.impl.CommandLineCommitClient;
 import com.pmalipio.commitclient.impl.FallbackClient;
 import com.pmalipio.commitclient.impl.GithubCommitClient;
+import com.pmalipio.commitviewer.configuration.CommitViewerConfiguration;
 import io.atlassian.fugue.Either;
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -37,14 +41,11 @@ public class CommitViewerController {
 
     private CommitClient commitClient;
 
-    public CommitViewerController() {
-        final CommitClient primary = new GithubCommitClient();
-        final CommitClientConfiguration configuration = CommitClientConfiguration.builder()
-                .withPageSize(30)
-                .withTimeout(120)
-                .build();
-        final CommitClient secondary = CommandLineCommitClient.from(configuration);
-        this.commitClient = FallbackClient.from(primary, secondary);
+    @Autowired
+    public CommitViewerController(CommitViewerConfiguration configuration) {
+        CommitClient primaryClient = configuration.getPrimaryClient();
+        CommitClient secondaryClient = configuration.getSecondaryClient();
+        this.commitClient = FallbackClient.from(primaryClient, secondaryClient);
     }
 
     /**
@@ -57,6 +58,7 @@ public class CommitViewerController {
      * @param page    the page number.
      * @return a List with the commit info.
      */
+    @Cacheable
     @GetMapping("/repos/{user}/{repname}/commits")
     public List<CommitInfo> getCommits(@PathVariable final String user,
                                        @PathVariable final String repname,
