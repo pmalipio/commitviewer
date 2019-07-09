@@ -81,11 +81,17 @@ public class GitClientImpl implements GitClient {
 
     private CommandLineParams.CommandLineParamsBuilder getParamsBuilderForLogProcessor(final String repositoryDir,
                                                                                        final Function logProcessor) {
+        // this git log command creates a one line output for each commit:
+        // It applies the followin template: commit:(.*),author:(.*),date:(.*),message:(.*)__EOL__
+        // It cleans up ^M, then replaces all CR, then it replaces line breaks by the __NL__ tag.
+        // The only linebreack here is by replacing the __EOL__ tag by a \n. Finally it removes __NL__at the
+        // beginning of the line whish is garbage.
         return CommandLineParams.builder()
                 .withWorkingDirectory(configuration.getBaseDirectory() + "/" + repositoryDir)
                 .withTimeout(configuration.getCommandExecutionTimeout())
                 .withLineProcessor(logProcessor)
-                .withCommand("git","log", "--pretty=format:commit:%H,author:%aN <%aE>,date:%ad,message:%s");
+                .withCommand("/bin/sh", "-c", "git log --pretty=format:'commit:%H,author:%aN <%aE>,date:%ad,message:%B__EOL__'" +
+                "|sed 's/\\r//'|sed ':a;N;$!ba;s/\\n/__NL__/g'|sed 's/__EOL__/\\n/g'|sed 's/^__NL__//g'");
     }
 
     @Override

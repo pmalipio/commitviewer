@@ -74,15 +74,15 @@ public class CommandLineCommitClient implements CommitClient {
     }
 
     private CommitInfo processLogLine(final String line) {
-        final String linePattern = "^commit:(.*),author:(.*),date:(.*),message:(.*)$";
-        final Pattern pattern = Pattern.compile(linePattern);
+        final String linePattern = "^commit:(.*),author:(.*),date:(.*),message:(.*)";
+        final Pattern pattern = Pattern.compile(linePattern, Pattern.MULTILINE);
         final Matcher matcher = pattern.matcher(line);
         if (matcher.find()) {
             return CommitInfo.buiilder()
                     .withCommit(matcher.group(1))
                     .withAuthor(matcher.group(2))
                     .withDate((matcher.group(3)))
-                    .withMessage(matcher.group(4))
+                    .withMessage(matcher.group(4).replaceAll("__NL__", "\n"))
                     .build();
         } else {
             throw new InvalidLineException("Failed to parse line: " + line);

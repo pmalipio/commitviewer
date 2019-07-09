@@ -2,6 +2,10 @@
 
 This project consists of a Codacy challenge response.
 
+## Dependencies
+
+This software depends on bash, git and sed.
+
 ## Assumtions
 
 Listing commits using the API takes the branch as an optional argument. 
@@ -16,12 +20,25 @@ Since these are the default for git log.
 
 If a page is not found it returns an empty list.
 
-## Limitations
+## Implementation Notes
 
-The command line parser is based on single lines which allowed a very convenient and elegant solution for processing
-the log into a data structure. Unfortunately, messages cannot be outputted by git log in a single
-line format and I've wrongly assumed that the "%s" option would escape the full commit message.
-Futher work needs to be done to include full commit messages.
+The command line parser is based on single lines which allowed a very convenient, elegant and fast solution for processing
+the log into a data structure. 
+
+Unfortunately, messages cannot be outputted by git log in a single line.
+
+To overcome this issue, I used sed to replace linebreaks by the __NL__ tag. Each line has a
+__EOL__ tag to explicitly mark the end of the line eventually replaced by a line break.
+
+This is done by the following git commad:
+
+```
+git log --pretty=format:'commit:%H,author:%aN <%aE>,date:%ad,message:%B__EOL__'|sed ':a;N;$!ba;s/\n/__NL__/g'|sed 's/__EOL__/\n/g'
+```
+
+Then, in the java side, when processing the log lines the __NL__ tags are replaced by line breaks
+again.
+
 
 ## Getting Started
 
