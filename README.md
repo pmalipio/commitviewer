@@ -15,8 +15,9 @@ The command line based commits list includes the following fields:
 * commmitId - the commmit Id
 * author - the author and email 
 * date - date in the git log format
-* message - the subject (first message line) when using the command line client.
-Since these are the default for git log.
+* message - the commit message.
+
+Since these are the defaults for git log.
 
 If a page is not found it returns an empty list.
 
