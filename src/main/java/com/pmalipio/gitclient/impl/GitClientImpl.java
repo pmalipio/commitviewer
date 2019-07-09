@@ -27,8 +27,6 @@ import java.util.regex.Pattern;
 
 /**
  * Git client implementation
- *
- * @param <T> return type for output transformation.
  */
 public class GitClientImpl implements GitClient {
 

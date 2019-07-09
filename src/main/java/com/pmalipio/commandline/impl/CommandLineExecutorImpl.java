@@ -18,6 +18,11 @@ import java.io.*;
 import java.util.List;
 import java.util.concurrent.*;
 
+/**
+ * The command line executor implementation.
+ *
+ * @param <T> return type for log processing.
+ */
 public class CommandLineExecutorImpl<T> implements CommandLineExecutor {
 
     @Override

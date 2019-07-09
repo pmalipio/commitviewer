@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 /**
  * Processes the command output.
  *
- * @param <T> The result list type.
+ * @param <T> return type for log processing.
  */
 public class StreamProcessor<T> implements Supplier<List<T>> {
     private final InputStream inputStream;

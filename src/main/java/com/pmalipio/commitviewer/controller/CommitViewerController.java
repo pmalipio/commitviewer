@@ -12,14 +12,10 @@ package com.pmalipio.commitviewer.controller;
 
 
 import com.pmalipio.commitclient.api.CommitClient;
-import com.pmalipio.commitclient.api.CommitClientConfiguration;
 import com.pmalipio.commitclient.data.CommitInfo;
-import com.pmalipio.commitclient.impl.CommandLineCommitClient;
 import com.pmalipio.commitclient.impl.FallbackClient;
-import com.pmalipio.commitclient.impl.GithubCommitClient;
 import com.pmalipio.commitviewer.configuration.CommitViewerConfiguration;
 import io.atlassian.fugue.Either;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

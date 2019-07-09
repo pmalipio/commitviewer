@@ -10,7 +10,9 @@
  */
 package com.pmalipio.commitclient.data;
 
-
+/**
+ * Commit Information.
+ */
 public class CommitInfo {
     private String commit;
     private String author;
