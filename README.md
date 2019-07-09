@@ -7,14 +7,21 @@ This project consists of a Codacy challenge response.
 Listing commits using the API takes the branch as an optional argument. 
 If the branch is not passed it is assumed to be the master.
 
-The commits list includes the following fields:
-* commmitId
-* author
-* date
-* message
+The command line based commits list includes the following fields:
+* commmitId - the commmit Id
+* author - the author and email 
+* date - date in the git log format
+* message - the subject (first message line) when using the command line client.
 Since these are the default for git log.
 
 If a page is not found it returns an empty list.
+
+## Limitations
+
+The command line parser is based on single lines which allowed a very convenient and elegant solution for processing
+the log into a data structure. Unfortunately, messages cannot be outputted by git log in a single
+line format and I've wrongly assumed that the "%s" option would escape the full commit message.
+Futher work needs to be done to include full commit messages.
 
 ## Getting Started
 
