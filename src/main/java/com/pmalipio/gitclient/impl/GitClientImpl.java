@@ -95,7 +95,7 @@ public class GitClientImpl implements GitClient {
     }
 
     @Override
-    public Either<List, Exception> processLog(final String repositoryDir, final Function logProcessor) {
+    public Either<Exception, List> processLog(final String repositoryDir, final Function logProcessor) {
         CommandLineParams logCmd = getParamsBuilderForLogProcessor(repositoryDir, logProcessor).build();
         return configuration.getCommandLineExecutor().runCommand(logCmd);
     }
